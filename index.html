@@ -5,7 +5,58 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>AWS Is Cool!</title>
     </head>
+
+    <script>
+        async function callAPI(num1, num2) {
+            try {
+                const resultDiv = document.querySelector("#result");
+
+                resultDiv.innerHTML = "Loading...";
+
+                let headers = new Headers();
+                headers.append("content-type", "application/json");
+                let body = JSON.stringify({
+                    num1: num1,
+                    num2: num2,
+                });
+                let requestOptions = {
+                    method: "POST",
+                    headers: headers,
+                    body: body,
+                    redirect: "follow",
+                };
+
+                // Replace with api url on local
+                const res = await fetch(`${process.env.addApi}`, requestOptions);
+                const data = await res.json();
+
+                let resultHtml = `<p>Num1: ${data.body.num1}\nNum2: ${data.body.num2}\nResult: ${data.body.result}</p>`;
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                console.log("Error:", error);
+            }
+        }
+    </script>
+
     <body>
         <h1>Look mom I'm in the cloud</h1>
+
+        <h2>Add some numbers</h2>
+        <form>
+            <div>
+                <label for="num1">Num 1</label>
+                <input type="number" id="num1" name="num1" />
+            </div>
+            <br />
+            <div>
+                <label for="num2">Num 2</label>
+                <input type="number" id="num2" name="num12" />
+            </div>
+            <div>
+                <button type="button" onclick="callAPI(document.getElementById('num1').value, document.getElementById('num2').value)">Add</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
     </body>
 </html>
